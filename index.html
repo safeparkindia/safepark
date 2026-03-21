@@ -51,7 +51,6 @@
     const COPYRIGHT_HTML = `<a href="https://www.theprojectwala.com" target="_blank">© The Project Wala</a>`;
 
     // --- DATABASE & SECURITY CONFIG ---
-    // NEW Google Script URL
     const DATABASE_URL = "https://script.google.com/macros/s/AKfycbx9sjVXHurTFbJWG0WGNlEQ4f7t4ZZmRs9jz4V-Yt9zEd2v-CHtVdM_pwpRe2CxgAMayw/exec";
     const AUTH_ID = "ceosafeparkindia";
     const AUTH_PASS = "Original@007";
@@ -76,15 +75,34 @@
         }
     }
 
-    // --- PAGE: ABOUT US ---
+    // --- PAGE: ABOUT US (UPDATED WITH DETAILS) ---
     function showAboutPage() {
         document.getElementById('app').innerHTML = `
             <div class="text-center pt-8">
                 <img src="${LOGO_URL}" alt="SafePark Logo" class="logo-img" onerror="this.src='https://via.placeholder.com/90?text=SP'">
-                <h1 class="text-2xl font-bold text-gray-800 mt-4">About Us</h1>
+                <h1 class="text-2xl font-bold text-gray-800 mt-4">About SafePark India</h1>
             </div>
             
             <div class="mt-6 space-y-4">
+                
+                <!-- About SafePark Section -->
+                <div class="bg-orange-50 border border-orange-100 p-4 rounded-lg text-sm text-gray-700">
+                    <h3 class="font-bold text-orange-700 mb-2 text-base">Our Mission</h3>
+                    <p class="mb-3">SafePark India is a revolutionary initiative designed to solve parking and vehicle safety challenges across the nation. We bridge the communication gap between vehicle owners and the public using smart technology.</p>
+                    
+                    <h3 class="font-bold text-orange-700 mb-2 text-base">How It Works</h3>
+                    <p class="mb-3">By utilizing unique QR codes, we allow citizens to instantly contact vehicle owners in case of emergencies, parking issues, or security alerts—without revealing sensitive personal data. Your privacy is our priority.</p>
+                    
+                    <h3 class="font-bold text-orange-700 mb-2 text-base">Key Features</h3>
+                    <ul class="list-disc ml-4 space-y-1">
+                        <li>Instant Notification to Owners</li>
+                        <li>Privacy Protection (Number Hidden)</li>
+                        <li>Emergency Contact Integration</li>
+                        <li>Pan-India Service</li>
+                    </ul>
+                </div>
+
+                <!-- Contact Details -->
                 <div class="info-box">
                     <p class="info-label">CEO & Contact Person</p>
                     <p class="info-value">Mohit Kumar Jha</p>
@@ -102,11 +120,6 @@
                     <p class="info-value">
                         <a href="https://www.theprojectwala.com" target="_blank" class="text-blue-600 hover:underline">www.theprojectwala.com</a>
                     </p>
-                </div>
-
-                <div class="bg-blue-50 p-4 rounded-lg text-sm text-blue-800 mt-6">
-                    <p class="font-bold text-center">SafePark India</p>
-                    <p class="text-center text-xs mt-1 text-blue-600">A smart parking solution initiative by The Project Wala.</p>
                 </div>
 
                 <button class="btn btn-secondary mt-6" onclick="window.location.href=window.location.pathname">← Back to Home</button>
