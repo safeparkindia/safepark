@@ -13,11 +13,16 @@
         .btn:active { transform: scale(0.98); }
         .btn-primary { background-color: #f97316; }
         .btn-call { background-color: #16a34a; }
+        .btn-secondary { background-color: #64748b; }
         input { width: 100%; padding: 12px; margin-top: 6px; border: 1px solid #e2e8f0; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
         input:focus { border-color: #f97316; outline: none; }
         label { font-size: 14px; font-weight: 600; color: #475569; margin-top: 20px; display: block; }
         .logo-img { width: 90px; height: 90px; margin: 0 auto; display: block; border-radius: 20px; object-fit: cover; }
-        .copyright { text-align: center; font-size: 11px; color: #9ca3af; margin-top: 30px; padding-bottom: 10px; }
+        .copyright { text-align: center; font-size: 11px; color: #9ca3af; margin-top: 30px; padding: 10px; }
+        .copyright a { color: #f97316; text-decoration: none; font-weight: bold; }
+        .info-box { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; margin-top: 10px; text-align: left; }
+        .info-label { font-size: 12px; color: #64748b; }
+        .info-value { font-size: 16px; font-weight: 600; color: #1e293b; }
     </style>
 </head>
 <body>
@@ -40,12 +45,13 @@
     }
 
     // --- CONFIGURATION ---
-    const LOGO_URL = "./logo.png"; // Ensure this file exists in your GitHub repo
-    const COPYRIGHT_TEXT = "© SafePark India";
+    const LOGO_URL = "./logo.png";
+    
+    // Updated Copyright HTML
+    const COPYRIGHT_HTML = `<a href="https://www.theprojectwala.com" target="_blank">© The Project Wala</a>`;
 
     // --- DATABASE & SECURITY CONFIG ---
-    // WARNING: In a professional app, credentials should not be exposed in frontend code.
-    // For this educational/demo project, we use basic authentication.
+    // NEW Google Script URL
     const DATABASE_URL = "https://script.google.com/macros/s/AKfycbx9sjVXHurTFbJWG0WGNlEQ4f7t4ZZmRs9jz4V-Yt9zEd2v-CHtVdM_pwpRe2CxgAMayw/exec";
     const AUTH_ID = "ceosafeparkindia";
     const AUTH_PASS = "Original@007";
@@ -54,6 +60,7 @@
     function router() {
         const params = new URLSearchParams(window.location.search);
         const dataParam = params.get('d');
+        const pageParam = params.get('page');
 
         if (dataParam) {
             const carData = decodeData(dataParam);
@@ -62,9 +69,50 @@
             } else {
                 showErrorPage();
             }
+        } else if (pageParam === 'about') {
+            showAboutPage();
         } else {
             showLandingPage();
         }
+    }
+
+    // --- PAGE: ABOUT US ---
+    function showAboutPage() {
+        document.getElementById('app').innerHTML = `
+            <div class="text-center pt-8">
+                <img src="${LOGO_URL}" alt="SafePark Logo" class="logo-img" onerror="this.src='https://via.placeholder.com/90?text=SP'">
+                <h1 class="text-2xl font-bold text-gray-800 mt-4">About Us</h1>
+            </div>
+            
+            <div class="mt-6 space-y-4">
+                <div class="info-box">
+                    <p class="info-label">CEO & Contact Person</p>
+                    <p class="info-value">Mohit Kumar Jha</p>
+                </div>
+
+                <div class="info-box">
+                    <p class="info-label">Email Address</p>
+                    <p class="info-value">
+                        <a href="mailto:admin@theprojectwala.com" class="text-blue-600 hover:underline">admin@theprojectwala.com</a>
+                    </p>
+                </div>
+
+                <div class="info-box">
+                    <p class="info-label">Official Website</p>
+                    <p class="info-value">
+                        <a href="https://www.theprojectwala.com" target="_blank" class="text-blue-600 hover:underline">www.theprojectwala.com</a>
+                    </p>
+                </div>
+
+                <div class="bg-blue-50 p-4 rounded-lg text-sm text-blue-800 mt-6">
+                    <p class="font-bold text-center">SafePark India</p>
+                    <p class="text-center text-xs mt-1 text-blue-600">A smart parking solution initiative by The Project Wala.</p>
+                </div>
+
+                <button class="btn btn-secondary mt-6" onclick="window.location.href=window.location.pathname">← Back to Home</button>
+            </div>
+            <div class="copyright">${COPYRIGHT_HTML}</div>
+        `;
     }
 
     // --- PAGE 1: REGISTRATION ---
@@ -92,7 +140,12 @@
 
                 <button class="btn btn-primary" onclick="generateQRCode()">Generate QR Code</button>
             </div>
-            <div class="copyright">${COPYRIGHT_TEXT}</div>
+            
+            <div class="text-center mt-4">
+                <a href="?page=about" class="text-sm text-blue-600 hover:underline">About Us</a>
+            </div>
+
+            <div class="copyright">${COPYRIGHT_HTML}</div>
         `;
     }
 
@@ -114,7 +167,6 @@
         const currentUrl = window.location.origin + window.location.pathname;
         const scanUrl = `${currentUrl}?d=${encodedString}`;
 
-        // --- SEND DATA TO DATABASE ---
         saveToDatabase(name, phone, vehicle, emg_name, emg_phone);
         
         showDashboard(scanUrl, data);
@@ -134,7 +186,7 @@
 
         fetch(DATABASE_URL, {
             method: 'POST',
-            mode: 'no-cors', // Required for Google Apps Script
+            mode: 'no-cors',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         }).then(() => {
@@ -157,7 +209,6 @@
                 <p class="font-semibold text-gray-700 mb-2">Your QR Code</p>
                 <div id="qrcode" class="flex justify-center p-2 inline-block mt-2 bg-white"></div>
                 
-                <!-- Text Below QR Code -->
                 <p class="text-sm text-gray-600 mt-3 font-medium">Scan to connect with the owner</p>
             </div>
 
@@ -169,7 +220,7 @@
                 </ol>
             </div>
             <button class="btn mt-4" style="background-color: #000;" onclick="window.print()">🖨️ Print / Save PDF</button>
-            <div class="copyright">${COPYRIGHT_TEXT}</div>
+            <div class="copyright">${COPYRIGHT_HTML}</div>
         `;
 
         new QRCode(document.getElementById("qrcode"), {
@@ -207,7 +258,7 @@
                 </div>
                 ` : ''}
 
-                <div class="copyright mt-8">${COPYRIGHT_TEXT}</div>
+                <div class="copyright mt-8">${COPYRIGHT_HTML}</div>
             </div>
         `;
     }
@@ -217,7 +268,7 @@
             <div class="p-6 text-center">
                 <h2 class="text-xl text-red-500 font-bold mt-4">⚠️ Invalid Code</h2>
                 <p class="mt-2 text-gray-500">This QR code seems to be broken or invalid.</p>
-                <div class="copyright mt-8">${COPYRIGHT_TEXT}</div>
+                <div class="copyright mt-8">${COPYRIGHT_HTML}</div>
             </div>
         `;
     }
