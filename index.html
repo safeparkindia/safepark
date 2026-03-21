@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f1f5f9; }
-        .container { max-width: 450px; margin: 0 auto; background: white; min-height: 100vh; box-shadow: 0 0 15px rgba(0,0,0,0.05); }
+        .container { max-width: 450px; margin: 0 auto; background: white; min-height: 100vh; box-shadow: 0 0 15px rgba(0,0,0,0.05); padding-bottom: 20px; position: relative; }
         .btn { width: 100%; padding: 14px; background-color: #2563eb; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 15px; transition: transform 0.1s; }
         .btn:active { transform: scale(0.98); }
         .btn-primary { background-color: #f97316; }
@@ -17,6 +17,7 @@
         input:focus { border-color: #f97316; outline: none; }
         label { font-size: 14px; font-weight: 600; color: #475569; margin-top: 20px; display: block; }
         .logo-img { width: 90px; height: 90px; margin: 0 auto; display: block; border-radius: 20px; object-fit: cover; }
+        .copyright { text-align: center; font-size: 11px; color: #9ca3af; margin-top: 30px; padding-bottom: 10px; }
     </style>
 </head>
 <body>
@@ -27,7 +28,6 @@
 
 <script>
     // --- UTILITIES FOR DATA ENCODING ---
-    // This allows us to pass data inside the QR code URL itself
     function encodeData(obj) {
         return btoa(encodeURIComponent(JSON.stringify(obj)));
     }
@@ -39,18 +39,23 @@
         }
     }
 
-    // --- LOGO CONFIG ---
-    // Ensure you have uploaded 'logo.png' to your GitHub repository
-    const LOGO_URL = "./logo.png";
-        const DATABASE_URL = "https://script.google.com/macros/s/AKfycbzpMEmMkdnyhdQC1YCk6jMFPLRWFCpqbVvbq3chFjslASXY3tltKZ-9X0MUmt81qUJKCQ/exec";
+    // --- CONFIGURATION ---
+    const LOGO_URL = "./logo.png"; // Ensure this file exists in your GitHub repo
+    const COPYRIGHT_TEXT = "© SafePark India";
+
+    // --- DATABASE & SECURITY CONFIG ---
+    // WARNING: In a professional app, credentials should not be exposed in frontend code.
+    // For this educational/demo project, we use basic authentication.
+    const DATABASE_URL = "https://script.google.com/macros/s/AKfycbzpMEmMkdnyhdQC1YCk6jMFPLRWFCpqbVvbq3chFjslASXY3tltKZ-9X0MUmt81qUJKCQ/exec";
+    const AUTH_ID = "ceosafeparkindia";
+    const AUTH_PASS = "Original@007";
 
     // --- ROUTER ---
     function router() {
         const params = new URLSearchParams(window.location.search);
-        const dataParam = params.get('d'); // 'd' stands for data
+        const dataParam = params.get('d');
 
         if (dataParam) {
-            // If URL has data, show the Scanner/Call Page
             const carData = decodeData(dataParam);
             if (carData) {
                 showScannerPage(carData);
@@ -58,7 +63,6 @@
                 showErrorPage();
             }
         } else {
-            // Otherwise show Registration
             showLandingPage();
         }
     }
@@ -88,6 +92,7 @@
 
                 <button class="btn btn-primary" onclick="generateQRCode()">Generate QR Code</button>
             </div>
+            <div class="copyright">${COPYRIGHT_TEXT}</div>
         `;
     }
 
@@ -109,34 +114,34 @@
         const currentUrl = window.location.origin + window.location.pathname;
         const scanUrl = `${currentUrl}?d=${encodedString}`;
 
-        // --- NEW: SEND DATA TO DATABASE ---
-        if (DATABASE_URL && DATABASE_URL !== "PASTE_YOUR_GOOGLE_SCRIPT_URL_HERE") {
-            fetch(DATABASE_URL, {
-                method: 'POST',
-                mode: 'no-cors', // Required for Google Apps Script
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    name: name,
-                    phone: phone,
-                    vehicle: vehicle,
-                    emg_name: emg_name,
-                    emg_phone: emg_phone
-                })
-            }).catch(err => console.log("DB Error (Ignored):", err));
-        }
-        // -----------------------------------
-
+        // --- SEND DATA TO DATABASE ---
+        saveToDatabase(name, phone, vehicle, emg_name, emg_phone);
+        
         showDashboard(scanUrl, data);
     }
 
-        const data = { n: name, p: phone, v: vehicle, en: emg_name, ep: emg_phone };
-        const encodedString = encodeData(data);
-        
-        // Create the URL that contains the data
-        const currentUrl = window.location.origin + window.location.pathname;
-        const scanUrl = `${currentUrl}?d=${encodedString}`;
+    // --- DATABASE FUNCTION ---
+    function saveToDatabase(name, phone, vehicle, emg_name, emg_phone) {
+        const payload = {
+            auth_id: AUTH_ID,
+            auth_pass: AUTH_PASS,
+            name: name,
+            phone: phone,
+            vehicle: vehicle,
+            emg_name: emg_name,
+            emg_phone: emg_phone
+        };
 
-        showDashboard(scanUrl, data);
+        fetch(DATABASE_URL, {
+            method: 'POST',
+            mode: 'no-cors', // Required for Google Apps Script
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        }).then(() => {
+            console.log("Data saved to database successfully.");
+        }).catch(error => {
+            console.error("Error saving to database:", error);
+        });
     }
 
     // --- PAGE 2: DASHBOARD (SHOW QR) ---
@@ -151,7 +156,9 @@
             <div class="bg-white p-6 rounded-xl mt-4 text-center border-2 border-orange-200">
                 <p class="font-semibold text-gray-700 mb-2">Your QR Code</p>
                 <div id="qrcode" class="flex justify-center p-2 inline-block mt-2 bg-white"></div>
-                <p class="text-xs text-gray-400 mt-2">Scan this to test</p>
+                
+                <!-- Text Below QR Code -->
+                <p class="text-sm text-gray-600 mt-3 font-medium">Scan to connect with the owner</p>
             </div>
 
             <div class="mt-4 bg-blue-50 p-4 rounded-lg text-sm text-blue-800">
@@ -162,9 +169,9 @@
                 </ol>
             </div>
             <button class="btn mt-4" style="background-color: #000;" onclick="window.print()">🖨️ Print / Save PDF</button>
+            <div class="copyright">${COPYRIGHT_TEXT}</div>
         `;
 
-        // Generate QR
         new QRCode(document.getElementById("qrcode"), {
             text: url,
             width: 180,
@@ -200,9 +207,7 @@
                 </div>
                 ` : ''}
 
-                <div class="text-center mt-8 text-xs text-gray-400">
-                    <p>Powered by SafePark India</p>
-                </div>
+                <div class="copyright mt-8">${COPYRIGHT_TEXT}</div>
             </div>
         `;
     }
@@ -212,6 +217,7 @@
             <div class="p-6 text-center">
                 <h2 class="text-xl text-red-500 font-bold mt-4">⚠️ Invalid Code</h2>
                 <p class="mt-2 text-gray-500">This QR code seems to be broken or invalid.</p>
+                <div class="copyright mt-8">${COPYRIGHT_TEXT}</div>
             </div>
         `;
     }
