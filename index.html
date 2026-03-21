@@ -42,6 +42,7 @@
     // --- LOGO CONFIG ---
     // Ensure you have uploaded 'logo.png' to your GitHub repository
     const LOGO_URL = "./logo.png";
+        const DATABASE_URL = "https://script.google.com/macros/s/AKfycbzpMEmMkdnyhdQC1YCk6jMFPLRWFCpqbVvbq3chFjslASXY3tltKZ-9X0MUmt81qUJKCQ/exec";
 
     // --- ROUTER ---
     function router() {
@@ -101,6 +102,32 @@
             alert("Please fill Name, Phone, and Vehicle Number.");
             return;
         }
+
+        const data = { n: name, p: phone, v: vehicle, en: emg_name, ep: emg_phone };
+        const encodedString = encodeData(data);
+        
+        const currentUrl = window.location.origin + window.location.pathname;
+        const scanUrl = `${currentUrl}?d=${encodedString}`;
+
+        // --- NEW: SEND DATA TO DATABASE ---
+        if (DATABASE_URL && DATABASE_URL !== "PASTE_YOUR_GOOGLE_SCRIPT_URL_HERE") {
+            fetch(DATABASE_URL, {
+                method: 'POST',
+                mode: 'no-cors', // Required for Google Apps Script
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: name,
+                    phone: phone,
+                    vehicle: vehicle,
+                    emg_name: emg_name,
+                    emg_phone: emg_phone
+                })
+            }).catch(err => console.log("DB Error (Ignored):", err));
+        }
+        // -----------------------------------
+
+        showDashboard(scanUrl, data);
+    }
 
         const data = { n: name, p: phone, v: vehicle, en: emg_name, ep: emg_phone };
         const encodedString = encodeData(data);
