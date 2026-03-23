@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f1f5f9; }
-        .container { max-width: 450px; margin: 0 auto; background: white; min-height: 100vh; box-shadow: 0 0 15px rgba(0,0,0,0.05); padding-bottom: 20px; position: relative; }
+        .container { max-width: 450px; margin: 0 auto; background: white; min-height: 100vh; box-shadow: 0 0 15px rgba(0,0,0,0.05); padding-bottom: 20px; }
         .btn { width: 100%; padding: 14px; background-color: #2563eb; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 15px; transition: transform 0.1s; }
         .btn:active { transform: scale(0.98); }
         .btn-primary { background-color: #f97316; }
@@ -32,25 +32,13 @@
 </div>
 
 <script>
-    // --- UTILITIES FOR DATA ENCODING ---
-    function encodeData(obj) {
-        return btoa(encodeURIComponent(JSON.stringify(obj)));
-    }
-    function decodeData(str) {
-        try {
-            return JSON.parse(decodeURIComponent(atob(str)));
-        } catch (e) {
-            return null;
-        }
-    }
+    // --- UTILITIES ---
+    function encodeData(obj) { return btoa(encodeURIComponent(JSON.stringify(obj))); }
+    function decodeData(str) { try { return JSON.parse(decodeURIComponent(atob(str))); } catch (e) { return null; } }
 
     // --- CONFIGURATION ---
     const LOGO_URL = "./logo.png";
-    
-    // Updated Copyright HTML
     const COPYRIGHT_HTML = `<a href="https://www.theprojectwala.com" target="_blank">© The Project Wala</a>`;
-
-    // --- DATABASE & SECURITY CONFIG ---
     const DATABASE_URL = "https://script.google.com/macros/s/AKfycbx9sjVXHurTFbJWG0WGNlEQ4f7t4ZZmRs9jz4V-Yt9zEd2v-CHtVdM_pwpRe2CxgAMayw/exec";
     const AUTH_ID = "ceosafeparkindia";
     const AUTH_PASS = "Original@007";
@@ -58,16 +46,11 @@
     // --- ROUTER ---
     function router() {
         const params = new URLSearchParams(window.location.search);
-        const dataParam = params.get('d');
+        const carId = params.get('id');
         const pageParam = params.get('page');
 
-        if (dataParam) {
-            const carData = decodeData(dataParam);
-            if (carData) {
-                showScannerPage(carData);
-            } else {
-                showErrorPage();
-            }
+        if (carId) {
+            fetchCarData(carId);
         } else if (pageParam === 'about') {
             showAboutPage();
         } else {
@@ -75,64 +58,47 @@
         }
     }
 
-    // --- PAGE: ABOUT US (UPDATED WITH DETAILS) ---
+    // --- FETCH DATA ---
+    function fetchCarData(carId) {
+        document.getElementById('app').innerHTML = `<div class="text-center pt-20"><p class="text-gray-500">🔒 Securely connecting...</p></div>`;
+        fetch(DATABASE_URL + "?id=" + carId)
+            .then(response => response.json())
+            .then(result => {
+                if (result.status === 'success') {
+                    showScannerPage(carId, result.data);
+                } else {
+                    showErrorPage();
+                }
+            })
+            .catch(() => showErrorPage());
+    }
+
+    // --- PAGE: ABOUT US ---
     function showAboutPage() {
         document.getElementById('app').innerHTML = `
-            <div class="text-center pt-8">
-                <img src="${LOGO_URL}" alt="SafePark Logo" class="logo-img" onerror="this.src='https://via.placeholder.com/90?text=SP'">
+             <div class="text-center pt-8">
+                <img src="${LOGO_URL}" alt="Logo" class="logo-img" onerror="this.style.display='none'">
                 <h1 class="text-2xl font-bold text-gray-800 mt-4">About SafePark India</h1>
             </div>
-            
             <div class="mt-6 space-y-4">
-                
-                <!-- About SafePark Section -->
-                <div class="bg-orange-50 border border-orange-100 p-4 rounded-lg text-sm text-gray-700">
-                    <h3 class="font-bold text-orange-700 mb-2 text-base">Our Mission</h3>
-                    <p class="mb-3">SafePark India is a revolutionary initiative designed to solve parking and vehicle safety challenges across the nation. We bridge the communication gap between vehicle owners and the public using smart technology.</p>
-                    
-                    <h3 class="font-bold text-orange-700 mb-2 text-base">How It Works</h3>
-                    <p class="mb-3">By utilizing unique QR codes, we allow citizens to instantly contact vehicle owners in case of emergencies, parking issues, or security alerts—without revealing sensitive personal data. Your privacy is our priority.</p>
-                    
-                    <h3 class="font-bold text-orange-700 mb-2 text-base">Key Features</h3>
-                    <ul class="list-disc ml-4 space-y-1">
-                        <li>Instant Notification to Owners</li>
-                        <li>Privacy Protection (Number Hidden)</li>
-                        <li>Emergency Contact Integration</li>
-                        <li>Pan-India Service</li>
-                    </ul>
+                <div style="background-color: #fff7ed; padding: 16px; border-radius: 8px; font-size:14px; color:#374151;">
+                    <p><b>Instant Notification:</b> Get alerts when someone scans your code.</p>
+                    <p class="mt-2"><b>Privacy Protection:</b> Your number is hidden unless you allow it.</p>
                 </div>
-
-                <!-- Contact Details -->
-                <div class="info-box">
-                    <p class="info-label">CEO</p>
-                    <p class="info-value">Mohit Kumar Jha</p>
-                </div>
-
-                <div class="info-box">
-                    <p class="info-label">Email Address</p>
-                    <p class="info-value">
-                        <a href="mailto:admin@theprojectwala.com" class="text-blue-600 hover:underline">admin@theprojectwala.com</a>
-                    </p>
-                </div>
-
-                <div class="info-box">
-                    <p class="info-label">Official Website</p>
-                    <p class="info-value">
-                        <a href="https://www.theprojectwala.com" target="_blank" class="text-blue-600 hover:underline">www.theprojectwala.com</a>
-                    </p>
-                </div>
-
-                <button class="btn btn-secondary mt-6" onclick="window.location.href=window.location.pathname">← Back to Home</button>
+                <div class="info-box"><p class="info-label">CEO</p><p class="info-value">Mohit Kumar Jha</p></div>
+                <div class="info-box"><p class="info-label">Email</p><p class="info-value"><a href="mailto:admin@theprojectwala.com" class="text-blue-600">admin@theprojectwala.com</a></p></div>
+                <div class="info-box"><p class="info-label">Website</p><p class="info-value"><a href="https://www.theprojectwala.com" target="_blank" class="text-blue-600">www.theprojectwala.com</a></p></div>
+                <button class="btn btn-secondary" onclick="window.location.href=window.location.pathname">← Back to Home</button>
             </div>
             <div class="copyright">${COPYRIGHT_HTML}</div>
         `;
     }
 
-    // --- PAGE 1: REGISTRATION ---
+    // --- PAGE 1: REGISTRATION (Original Layout + Privacy Toggle) ---
     function showLandingPage() {
         document.getElementById('app').innerHTML = `
             <div class="text-center pt-8">
-                <img src="${LOGO_URL}" alt="SafePark Logo" class="logo-img" onerror="this.src='https://via.placeholder.com/90?text=SP'">
+                <img src="${LOGO_URL}" alt="Logo" class="logo-img" onerror="this.style.display='none'">
                 <h1 class="text-2xl font-bold text-gray-800 mt-4">SafePark <span class="text-blue-600">INDIA</span></h1>
                 <p class="text-gray-500 text-sm">Generate your parking QR instantly</p>
             </div>
@@ -144,12 +110,26 @@
                 <label>Mobile Number</label>
                 <input type="tel" id="owner_phone" placeholder="10 Digit Number" maxlength="10">
                 
+                <label>Email Address (For Alerts)</label>
+                <input type="email" id="owner_email" placeholder="you@example.com">
+                
                 <label>Vehicle Number</label>
                 <input type="text" id="vehicle_number" placeholder="MH 01 AB 1234">
                 
                 <label>Emergency Contact (Optional)</label>
                 <input type="text" id="emg_name" placeholder="Relative Name">
                 <input type="tel" id="emg_phone" placeholder="Relative Number" class="mt-2">
+
+                <!-- PRIVACY TOGGLE ADVICE -->
+                <div style="background-color: #eff6ff; padding: 12px; border-radius: 8px; margin-top: 20px; border: 1px solid #bfdbfe;">
+                    <label style="display: flex; align-items: center; cursor: pointer; margin-top:0;">
+                        <input type="checkbox" id="privacy_toggle" checked style="width: 20px; height: 20px; cursor: pointer;">
+                        <span style="margin-left: 10px; font-weight: 600; color: #1e40af;">Hide My Number (Recommended)</span>
+                    </label>
+                    <p style="font-size: 12px; color: #3b82f6; margin-top: 5px; margin-left: 30px;">
+                        If checked, people must chat with you. If unchecked, they can call you directly.
+                    </p>
+                </div>
 
                 <button class="btn btn-primary" onclick="generateQRCode()">Generate QR Code</button>
             </div>
@@ -165,55 +145,45 @@
     function generateQRCode() {
         const name = document.getElementById('owner_name').value;
         const phone = document.getElementById('owner_phone').value;
+        const email = document.getElementById('owner_email').value;
         const vehicle = document.getElementById('vehicle_number').value;
         const emg_name = document.getElementById('emg_name').value;
         const emg_phone = document.getElementById('emg_phone').value;
+        const isPrivate = document.getElementById('privacy_toggle').checked;
 
-        if (!name || !phone || !vehicle) {
-            alert("Please fill Name, Phone, and Vehicle Number.");
+        if (!name || !phone || !vehicle || !email) {
+            alert("Please fill Name, Phone, Email, and Vehicle Number.");
             return;
         }
 
-        const data = { n: name, p: phone, v: vehicle, en: emg_name, ep: emg_phone };
-        const encodedString = encodeData(data);
-        
-        const currentUrl = window.location.origin + window.location.pathname;
-        const scanUrl = `${currentUrl}?d=${encodedString}`;
-
-        saveToDatabase(name, phone, vehicle, emg_name, emg_phone);
-        
-        showDashboard(scanUrl, data);
-    }
-
-    // --- DATABASE FUNCTION ---
-    function saveToDatabase(name, phone, vehicle, emg_name, emg_phone) {
         const payload = {
-            auth_id: AUTH_ID,
-            auth_pass: AUTH_PASS,
-            name: name,
-            phone: phone,
-            vehicle: vehicle,
-            emg_name: emg_name,
-            emg_phone: emg_phone
+            auth_id: AUTH_ID, auth_pass: AUTH_PASS,
+            name: name, phone: phone, email: email, vehicle: vehicle,
+            emg_name: emg_name, emg_phone: emg_phone,
+            show_number: isPrivate ? "No" : "Yes"
         };
 
+        // Save to Database
         fetch(DATABASE_URL, {
             method: 'POST',
             mode: 'no-cors',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
-        }).then(() => {
-            console.log("Data saved to database successfully.");
-        }).catch(error => {
-            console.error("Error saving to database:", error);
         });
+
+        // Generate ID logic
+        var carId = "SP" + new Date().toISOString().slice(0,19).replace(/[-:T]/g, "").slice(2,10);
+        const currentUrl = window.location.origin + window.location.pathname;
+        const scanUrl = `${currentUrl}?id=${carId}`;
+        
+        showDashboard(scanUrl, {v: vehicle});
     }
 
-    // --- PAGE 2: DASHBOARD (SHOW QR) ---
+    // --- PAGE 2: DASHBOARD ---
     function showDashboard(url, data) {
         document.getElementById('app').innerHTML = `
             <div class="text-center pt-6">
-                <img src="${LOGO_URL}" alt="SafePark Logo" class="w-14 h-14 mx-auto rounded-xl">
+                <img src="${LOGO_URL}" alt="Logo" class="w-14 h-14 mx-auto rounded-xl" onerror="this.style.display='none'">
                 <h2 class="text-xl font-bold text-gray-800 mt-3">✅ QR Generated!</h2>
                 <p class="text-gray-500 text-sm">Vehicle: <span class="font-bold text-blue-700">${data.v}</span></p>
             </div>
@@ -221,7 +191,6 @@
             <div class="bg-white p-6 rounded-xl mt-4 text-center border-2 border-orange-200">
                 <p class="font-semibold text-gray-700 mb-2">Your QR Code</p>
                 <div id="qrcode" class="flex justify-center p-2 inline-block mt-2 bg-white"></div>
-                
                 <p class="text-sm text-gray-600 mt-3 font-medium">Scan to connect with the owner</p>
             </div>
 
@@ -232,48 +201,79 @@
                     <li>Print it and stick on windshield.</li>
                 </ol>
             </div>
-            <button class="btn mt-4" style="background-color: #000;" onclick="window.print()">🖨️ Print / Save PDF</button>
+            <button class="btn" style="background-color: #000;" onclick="window.print()">🖨️ Print / Save PDF</button>
             <div class="copyright">${COPYRIGHT_HTML}</div>
         `;
 
-        new QRCode(document.getElementById("qrcode"), {
-            text: url,
-            width: 180,
-            height: 180
-        });
+        new QRCode(document.getElementById("qrcode"), { text: url, width: 180, height: 180 });
     }
 
-    // --- PAGE 3: SCANNER VIEW (PUBLIC) ---
-    function showScannerPage(data) {
+    // --- PAGE 3: SCANNER VIEW (HYBRID) ---
+    function showScannerPage(carId, data) {
+        const canCall = data.phone && data.phone.length > 0;
+
+        let callButtonHtml = '';
+        if(canCall) {
+            callButtonHtml = `
+                <a href="tel:${data.phone}" style="text-decoration: none;">
+                    <button class="btn btn-call text-lg font-semibold">📞 Call Owner</button>
+                </a>
+                <p class="text-xs text-center text-gray-400 mt-2 mb-4">OR send a message below</p>
+            `;
+        } else {
+             callButtonHtml = `
+                <div style="background-color: #f3f4f6; padding: 10px; border-radius: 8px; text-align: center; margin-bottom: 15px;">
+                    <p style="color: #6b7280; font-size: 14px;">🔒 Owner prefers <b>Private Mode</b>. Please send a message.</p>
+                </div>
+            `;
+        }
+
         document.getElementById('app').innerHTML = `
             <div class="text-center pt-12">
-                <img src="${LOGO_URL}" alt="SafePark Logo" class="w-16 h-16 mx-auto rounded-xl shadow-sm">
+                <img src="${LOGO_URL}" alt="Logo" class="w-16 h-16 mx-auto rounded-xl shadow-sm" onerror="this.style.display='none'">
                 <h2 class="text-xl font-bold text-gray-800 mt-4">🚗 Vehicle Alert</h2>
                 <p class="text-gray-500 mt-1">You are contacting the owner of:</p>
-                <div class="bg-blue-50 border border-blue-100 text-blue-700 px-4 py-3 rounded-lg inline-block mt-2 font-mono font-bold text-xl tracking-wider">
-                    ${data.v}
+                <div style="background-color: #eff6ff; border: 1px solid #dbeafe; color: #1d4ed8; padding: 12px 16px; border-radius: 8px; display: inline-block; margin-top: 8px; font-family: monospace; font-weight: bold; font-size: 20px;">
+                    ${data.vehicle}
                 </div>
             </div>
 
             <div class="mt-6 space-y-4 p-4">
-                <p class="text-sm text-center text-gray-400 mb-4">Tap to connect securely.</p>
-                
-                <a href="tel:${data.p}" class="block w-full">
-                    <button class="btn btn-call text-lg font-semibold">📞 Call Owner (${data.n})</button>
-                </a>
+                ${callButtonHtml}
 
-                ${data.ep ? `
+                <label class="text-sm font-semibold text-gray-700">Send a Message:</label>
+                <textarea id="msg_box" rows="2" placeholder="Please move your car..." style="width: 100%; padding: 10px; border: 1px solid #e5e7eb; border-radius: 6px; margin-top: 5px;"></textarea>
+                
+                <button class="btn" style="background-color: #2563eb;" onclick="sendMessage('${carId}')">📨 Send Message</button>
+
+                ${data.emg_phone ? `
                 <div class="border-t pt-6 mt-4">
                     <p class="text-sm text-center text-gray-500 mb-3">⚠️ Unable to reach owner?</p>
-                    <a href="tel:${data.ep}" class="block w-full">
-                        <button class="btn bg-orange-500 hover:bg-orange-600">🆘 Call Emergency (${data.en})</button>
+                    <a href="tel:${data.emg_phone}" class="block w-full">
+                        <button class="btn bg-orange-500 hover:bg-orange-600">🆘 Call Emergency (${data.emg_name})</button>
                     </a>
                 </div>
                 ` : ''}
+            </div>
 
-                <div class="copyright mt-8">${COPYRIGHT_HTML}</div>
+            <div class="copyright mt-8">${COPYRIGHT_HTML}</div>
+        `;
+    }
+
+    function sendMessage(carId) {
+        const msg = document.getElementById('msg_box').value;
+        if(!msg) { alert("Please type a message."); return; }
+        
+        const url = DATABASE_URL + "?id=" + carId + "&action=message&msg=" + encodeURIComponent(msg);
+        
+        document.getElementById('app').innerHTML = `
+            <div class="text-center pt-20">
+                <div style="font-size: 40px;">✅</div>
+                <h2 class="text-xl font-bold text-green-600 mt-4">Message Sent!</h2>
+                <p class="text-gray-500 mt-2">The owner has been notified via Email.</p>
             </div>
         `;
+        fetch(url).catch(err => console.log(err));
     }
 
     function showErrorPage() {
