@@ -73,22 +73,78 @@
             .catch(() => showErrorPage());
     }
 
-    // --- PAGE: ABOUT US ---
+    // --- PAGE: ABOUT US (DETAILED) ---
     function showAboutPage() {
         document.getElementById('app').innerHTML = `
              <div class="text-center pt-8">
                 <img src="${LOGO_URL}" alt="Logo" class="logo-img" onerror="this.style.display='none'">
                 <h1 class="text-2xl font-bold text-gray-800 mt-4">About SafePark India</h1>
+                <p class="text-orange-500 font-semibold text-sm mt-1">An Initiative of The Project Wala</p>
             </div>
-            <div class="mt-6 space-y-4">
-                <div style="background-color: #fff7ed; padding: 16px; border-radius: 8px; font-size:14px; color:#374151;">
-                    <p><b>Instant Notification:</b> Get alerts when someone scans your code.</p>
-                    <p class="mt-2"><b>Privacy Protection:</b> Your number is hidden unless you allow it.</p>
+            
+            <div class="mt-6 px-2 text-gray-700 text-sm leading-relaxed">
+                
+                <!-- Introduction -->
+                <div class="mb-4">
+                    <p class="text-justify">
+                        <span class="font-bold text-blue-700">SafePark India</span> is a revolutionary initiative designed to tackle the everyday challenges of parking and vehicle safety in our bustling cities. Born from the innovative minds at <b>The Project Wala</b>, we aim to bridge the communication gap between vehicle owners and the public using smart, accessible technology.
+                    </p>
                 </div>
-                <div class="info-box"><p class="info-label">CEO</p><p class="info-value">Mohit Kumar Jha</p></div>
-                <div class="info-box"><p class="info-label">Email</p><p class="info-value"><a href="mailto:admin@theprojectwala.com" class="text-blue-600">admin@theprojectwala.com</a></p></div>
-                <div class="info-box"><p class="info-label">Website</p><p class="info-value"><a href="https://www.theprojectwala.com" target="_blank" class="text-blue-600">www.theprojectwala.com</a></p></div>
-                <button class="btn btn-secondary" onclick="window.location.href=window.location.pathname">← Back to Home</button>
+
+                <!-- The Problem -->
+                <div class="bg-gray-50 p-3 rounded-lg mb-4">
+                    <h3 class="font-bold text-gray-800 mb-1">🚗 The Problem We Solve</h3>
+                    <p class="text-gray-600">
+                        In India, finding a parking spot is often just the beginning of the struggle. Vehicles blocking driveways, double parking, and abandoned cars cause immense frustration and traffic chaos. Traditionally, people write their phone numbers on the dashboard, but this poses a significant <b>risk to privacy</b>, leading to spam calls and misuse of personal data.
+                    </p>
+                </div>
+
+                <!-- The Solution -->
+                <div class="bg-orange-50 p-3 rounded-lg border border-orange-100 mb-4">
+                    <h3 class="font-bold text-orange-800 mb-1">✨ Our Solution</h3>
+                    <p class="text-gray-700">
+                        SafePark replaces the outdated paper-and-pen method with a secure <b>Smart QR Code</b>. By simply scanning the code placed on the windshield, anyone can instantly contact the vehicle owner for parking issues or emergencies—<b>without ever seeing their actual phone number</b>.
+                    </p>
+                </div>
+
+                <!-- Key Features -->
+                <div class="mb-4">
+                    <h3 class="font-bold text-gray-800 mb-2">Key Features:</h3>
+                    <ul class="list-disc ml-4 space-y-1 text-gray-600">
+                        <li><b>Privacy Protection:</b> Toggle "Private Mode" to hide your number completely and receive secure messages instead.</li>
+                        <li><b>Instant Alerts:</b> Get immediate email notifications when someone scans your code.</li>
+                        <li><b>Emergency Contacts:</b> Optionally add a secondary contact for critical situations.</li>
+                        <li><b>Easy to Use:</b> Generate your QR code in seconds, print it, and stick it on your car.</li>
+                    </ul>
+                </div>
+
+                <!-- Mission -->
+                <div class="text-center mt-6 mb-4">
+                    <p class="text-xs text-gray-500 uppercase tracking-wider font-bold">Our Mission</p>
+                    <p class="text-gray-600 italic mt-1">"To make Indian roads and parking spaces safer, more organized, and respectful of individual privacy."</p>
+                </div>
+
+                <!-- Contact Cards -->
+                <div class="info-box">
+                    <p class="info-label">CEO & Contact Person</p>
+                    <p class="info-value">Mohit Kumar Jha</p>
+                </div>
+
+                <div class="info-box">
+                    <p class="info-label">Email Address</p>
+                    <p class="info-value">
+                        <a href="mailto:admin@theprojectwala.com" class="text-blue-600 hover:underline">admin@theprojectwala.com</a>
+                    </p>
+                </div>
+
+                <div class="info-box">
+                    <p class="info-label">Official Website</p>
+                    <p class="info-value">
+                        <a href="https://www.theprojectwala.com" target="_blank" class="text-blue-600 hover:underline">www.theprojectwala.com</a>
+                    </p>
+                </div>
+
+                <button class="btn btn-secondary mt-6" onclick="window.location.href=window.location.pathname">← Back to Home</button>
             </div>
             <div class="copyright">${COPYRIGHT_HTML}</div>
         `;
@@ -120,7 +176,7 @@
                 <input type="text" id="emg_name" placeholder="Relative Name">
                 <input type="tel" id="emg_phone" placeholder="Relative Number" class="mt-2">
 
-                <!-- PRIVACY TOGGLE ADVICE -->
+                <!-- PRIVACY TOGGLE -->
                 <div style="background-color: #eff6ff; padding: 12px; border-radius: 8px; margin-top: 20px; border: 1px solid #bfdbfe;">
                     <label style="display: flex; align-items: center; cursor: pointer; margin-top:0;">
                         <input type="checkbox" id="privacy_toggle" checked style="width: 20px; height: 20px; cursor: pointer;">
