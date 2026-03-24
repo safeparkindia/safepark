@@ -40,9 +40,12 @@
     // --- CONFIGURATION ---
     const LOGO_URL = "./logo.png";
     const COPYRIGHT_HTML = `<a href="https://www.theprojectwala.com" target="_blank">© The Project Wala</a>`;
-    const DATABASE_URL = "https://script.google.com/macros/s/AKfycbxZi-IZ8jNcRMYwE47K7HSdOOD_Dip7tmcrTenU0QVSfLEZhEQ_vBasB_fNigH_ENcryg/exec";
+    
+    // !!! PASTE YOUR NEW GOOGLE SCRIPT URL HERE !!!
+    const DATABASE_URL = "PASTE_YOUR_NEW_SCRIPT_URL_HERE"; 
+    
     const AUTH_ID = "ceosafeparkindia";
-    const AUTH_PASS = "Safeparkdb@007";
+    const AUTH_PASS = "Safeparkdb@007"; // NEW PASSWORD
 
     // --- ROUTER ---
     function router() {
@@ -166,18 +169,19 @@
             return;
         }
 
-        // --- FIX: GENERATE ID HERE ---
-        // We generate a random 6-character ID to avoid timezone issues
+        // Generate Random ID
         var carId = "SP" + Math.random().toString(36).substr(2, 6).toUpperCase();
 
         const payload = {
-            id: carId, // Send this ID to the database
-            auth_id: AUTH_ID, auth_pass: AUTH_PASS,
+            id: carId, // Send ID to database
+            auth_id: AUTH_ID, 
+            auth_pass: AUTH_PASS, // Send new password
             name: name, phone: phone, email: email, vehicle: vehicle,
             emg_name: emg_name, emg_phone: emg_phone,
             show_number: isPrivate ? "No" : "Yes"
         };
 
+        // Send data to database
         fetch(DATABASE_URL, {
             method: 'POST',
             mode: 'no-cors',
@@ -186,7 +190,7 @@
         });
 
         const currentUrl = window.location.origin + window.location.pathname;
-        const scanUrl = `${currentUrl}?id=${carId}`; // Use the same ID in QR
+        const scanUrl = `${currentUrl}?id=${carId}`;
         
         showDashboard(scanUrl, {v: vehicle});
     }
