@@ -8,8 +8,32 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f1f5f9; margin: 0; padding: 0; }
-        .container { max-width: 480px; margin: 0 auto; background: white; min-height: 100vh; position: relative; box-sizing: border-box; }
-        @media (min-width: 500px) { body { padding: 20px 0; } .container { margin-top: 20px; margin-bottom: 20px; min-height: auto; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); } .copyright { border-radius: 0 0 16px 16px; } }
+        
+        /* Container Styling - Adjusted Width */
+        .container { 
+            max-width: 420px; /* Reduced width for better balance */
+            margin: 0 auto; 
+            background: white; 
+            min-height: 100vh; 
+            position: relative; 
+            box-sizing: border-box; 
+        }
+
+        /* Desktop View: Floating Card Effect */
+        @media (min-width: 500px) {
+            body { padding: 20px 0; }
+            .container {
+                margin-top: 20px;
+                margin-bottom: 20px;
+                min-height: auto; 
+                border-radius: 16px; 
+                box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
+            } 
+            .copyright {
+                border-radius: 0 0 16px 16px; 
+            }
+        }
+
         .btn { width: 100%; padding: 12px; background-color: #2563eb; color: white; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 12px; transition: background-color 0.2s; }
         .btn:active { opacity: 0.9; }
         .btn-primary { background-color: #f97316; }
@@ -47,7 +71,7 @@
     const DONATION_QR = "./qr.png"; // YOUR DONATION QR IMAGE
     const COPYRIGHT_HTML = `<a href="https://www.theprojectwala.com" target="_blank">© The Project Wala</a> | <a href="?page=terms">T&C</a>`;
     
-    // YOUR NEW DATABASE URL
+    // YOUR DATABASE URL
     const DATABASE_URL = "https://script.google.com/macros/s/AKfycbwuRWulp2pSiygr6BQ1NOni6fX4_koAiUCbAHSmDlyHbq25QAHOyvHDzktyGXg5hnqpyA/exec"; 
     
     const AUTH_ID = "ceosafeparkindia";
@@ -139,7 +163,7 @@
         `;
     }
 
-    // --- PAGE: ABOUT US ---
+    // --- PAGE: ABOUT US (WITH DONATION QR) ---
     function showAboutPage() {
         document.getElementById('app').innerHTML = `
              <div class="text-center pt-6">
@@ -163,13 +187,20 @@
                 <div class="info-box"><p class="info-label">Email</p><p class="info-value"><a href="mailto:admin@theprojectwala.com" class="text-blue-600">admin@theprojectwala.com</a></p></div>
                 <div class="info-box"><p class="info-label">Website</p><p class="info-value"><a href="https://www.theprojectwala.com" target="_blank" class="text-blue-600">www.theprojectwala.com</a></p></div>
 
+                <!-- DONATION SECTION MOVED HERE -->
+                <div class="p-4 bg-green-50 rounded-xl border border-green-200 text-center">
+                    <h3 class="font-bold text-green-700 text-sm">💖 Support Our Mission</h3>
+                    <p class="text-gray-500 text-xs mt-1 mb-3">If you like this idea, scan to donate.</p>
+                    <img src="${DONATION_QR}" alt="Donate QR" class="w-32 h-32 mx-auto rounded-lg shadow-sm" onerror="this.style.display='none'">
+                </div>
+
                 <button class="btn btn-secondary" onclick="window.location.href=window.location.pathname">← Back to Home</button>
             </div>
             <div class="copyright">${COPYRIGHT_HTML}</div>
         `;
     }
 
-    // --- PAGE 1: REGISTRATION (WITH DONATION & NEW FIELDS) ---
+    // --- PAGE 1: REGISTRATION (NO DONATION QR) ---
     function showLandingPage() {
         document.getElementById('app').innerHTML = `
             <div class="text-center pt-6">
@@ -223,13 +254,6 @@
 
                 <button class="btn btn-primary mt-4" onclick="generateQRCode()">Generate QR Code</button>
             </div>
-
-            <!-- DONATION SECTION -->
-            <div class="mt-6 p-4 bg-white rounded-xl border border-green-200 text-center">
-                <h3 class="font-bold text-green-700 text-sm">💖 Support Our Mission</h3>
-                <p class="text-gray-500 text-xs mt-1 mb-3">If you like this idea, scan to donate.</p>
-                <img src="${DONATION_QR}" alt="Donate QR" class="w-32 h-32 mx-auto rounded-lg shadow-sm" onerror="this.style.display='none'">
-            </div>
             
             <div class="text-center mt-4">
                 <a href="?page=about" class="text-sm text-blue-600 hover:underline">About Us</a>
@@ -246,7 +270,7 @@
         const vehicle = document.getElementById('vehicle_number').value;
         const emg_name = document.getElementById('emg_name').value;
         const emg_phone = document.getElementById('emg_phone').value;
-        const emg_email = document.getElementById('emg_email').value; // NEW
+        const emg_email = document.getElementById('emg_email').value; 
 
         const isPrivate = document.getElementById('privacy_toggle').checked;
         const isEmgPrivate = document.getElementById('privacy_emg_toggle').checked;
