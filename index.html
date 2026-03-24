@@ -41,8 +41,8 @@
     const LOGO_URL = "./logo.png";
     const COPYRIGHT_HTML = `<a href="https://www.theprojectwala.com" target="_blank">© The Project Wala</a>`;
     
-    //https://script.google.com/macros/s/AKfycbxI8KrcTpyyfcO-BJ-0oJgc-ENnqogqT1QH7cUQimJcckH5P2UO_QxZ_l6PO12vp7IGhA/exec
-    const DATABASE_URL = "https://script.google.com/macros/s/AKfycbxI8KrcTpyyfcO-BJ-0oJgc-ENnqogqT1QH7cUQimJcckH5P2UO_QxZ_l6PO12vp7IGhA/exec"; 
+    // YOUR NEW DATABASE URL
+    const DATABASE_URL = "https://script.google.com/macros/s/AKfycbyilMgtbkaWUZHFKji5kZiVTqQqydGBNn0HJtqebe7X5VrXOU9PneeoYvQn4UHkJBzQ-A/exec"; 
     
     const AUTH_ID = "ceosafeparkindia";
     const AUTH_PASS = "Safeparkdb@007"; // NEW PASSWORD
@@ -77,31 +77,82 @@
             .catch(() => showErrorPage());
     }
 
-    // --- PAGE: ABOUT US ---
+    // --- PAGE: ABOUT US (NEW DETAILED VERSION) ---
     function showAboutPage() {
         document.getElementById('app').innerHTML = `
              <div class="text-center pt-6">
                 <img src="${LOGO_URL}" alt="Logo" class="logo-img" onerror="this.style.display='none'">
                 <h1 class="text-2xl font-bold text-gray-800 mt-3">About SafePark India</h1>
-                <p class="text-orange-500 font-semibold text-sm mt-1">An Initiative of The Project Wala</p>
+                <p class="text-orange-500 font-semibold text-sm mt-1">A Flagship Initiative by The Project Wala</p>
             </div>
             
-            <div class="mt-5 text-gray-700 text-sm leading-relaxed">
-                <p class="text-justify mb-3">
-                    <span class="font-bold text-blue-700">SafePark India</span> is a revolutionary initiative designed to tackle the everyday challenges of parking and vehicle safety. Born from <b>The Project Wala</b>, we bridge the communication gap using smart technology.
-                </p>
-                <div class="bg-gray-50 p-3 rounded-lg mb-3">
-                    <h3 class="font-bold text-gray-800 mb-1 text-xs uppercase tracking-wide">🚗 The Problem</h3>
-                    <p class="text-gray-600 text-xs">Vehicles blocking driveways cause chaos. Writing phone numbers on dashboards risks privacy and spam.</p>
+            <div class="mt-5 text-gray-700 text-sm leading-relaxed space-y-4">
+                
+                <div>
+                    <h3 class="font-bold text-blue-800 text-base mb-1">🚀 Our Vision</h3>
+                    <p class="text-gray-600 text-justify">
+                        SafePark India is not just an app; it is a movement towards smarter, safer, and more organized cities. We believe that technology should solve everyday problems without compromising personal security. In a rapidly urbanizing India, parking issues often lead to unnecessary conflicts, towing hassles, and lost time. SafePark India aims to eliminate this chaos with a simple scan.
+                    </p>
                 </div>
-                <div class="bg-orange-50 p-3 rounded-lg border border-orange-100 mb-3">
-                    <h3 class="font-bold text-orange-800 mb-1 text-xs uppercase tracking-wide">✨ Our Solution</h3>
-                    <p class="text-gray-700 text-xs">Scan a secure QR code to contact the owner instantly—<b>without seeing their number</b>.</p>
+
+                <div class="bg-gray-50 p-4 rounded-lg border">
+                    <h3 class="font-bold text-gray-800 text-base mb-2">📉 The Problem We Solve</h3>
+                    <p class="text-gray-600 text-justify mb-2">
+                        Every day, thousands of vehicle owners face the dilemma: <i>"Should I write my phone number on the dashboard?"</i>
+                    </p>
+                    <ul class="list-disc ml-5 text-gray-600 space-y-1">
+                        <li><b>Privacy Risk:</b> Writing your number publicly invites spam calls, pranksters, and potential security threats.</li>
+                        <li><b>Communication Gap:</b> Without contact info, blocked vehicles cause traffic jams and arguments.</li>
+                        <li><b>Inefficiency:</b> Finding the owner of a car with lights left on or a flat tire is impossible.</li>
+                    </ul>
                 </div>
-                <div class="info-box"><p class="info-label">CEO</p><p class="info-value">Mohit Kumar Jha</p></div>
-                <div class="info-box"><p class="info-label">Email</p><p class="info-value"><a href="mailto:admin@theprojectwala.com" class="text-blue-600">admin@theprojectwala.com</a></p></div>
-                <div class="info-box"><p class="info-label">Website</p><p class="info-value"><a href="https://www.theprojectwala.com" target="_blank" class="text-blue-600">www.theprojectwala.com</a></p></div>
-                <button class="btn btn-secondary mt-4" onclick="window.location.href=window.location.pathname">← Back to Home</button>
+
+                <div class="bg-orange-50 p-4 rounded-lg border border-orange-100">
+                    <h3 class="font-bold text-orange-800 text-base mb-2">💡 Our Innovative Solution</h3>
+                    <p class="text-gray-700 text-justify">
+                        Developed by the team at <b>The Project Wala</b>, SafePark India replaces the outdated "paper-and-pen" method with a secure digital QR code. Our technology acts as a privacy shield. When someone scans your code, they can contact you instantly via a secure call or message—but they never see your actual phone number unless you allow it. This ensures that help reaches you when you need it, while keeping your identity safe.
+                    </p>
+                </div>
+
+                <div>
+                    <h3 class="font-bold text-gray-800 text-base mb-2">✨ Key Highlights</h3>
+                    <div class="grid grid-cols-2 gap-2 text-center">
+                        <div class="bg-blue-50 p-2 rounded">
+                            <p class="font-bold text-blue-600">100% Free</p>
+                            <p class="text-xs text-gray-500">No subscription fees</p>
+                        </div>
+                        <div class="bg-green-50 p-2 rounded">
+                            <p class="font-bold text-green-600">Privacy First</p>
+                            <p class="text-xs text-gray-500">Number masking tech</p>
+                        </div>
+                        <div class="bg-purple-50 p-2 rounded">
+                            <p class="font-bold text-purple-600">Instant Alerts</p>
+                            <p class="text-xs text-gray-500">Email notifications</p>
+                        </div>
+                        <div class="bg-red-50 p-2 rounded">
+                            <p class="font-bold text-red-600">Emergency</p>
+                            <p class="text-xs text-gray-500">Backup contacts</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-2">
+                    <p class="text-xs text-center text-gray-500 font-semibold uppercase tracking-wide mb-2">Contact The Team</p>
+                    <div class="info-box">
+                        <p class="info-label">CEO & Founder</p>
+                        <p class="info-value">Mohit Kumar Jha</p>
+                    </div>
+                    <div class="info-box">
+                        <p class="info-label">Support Email</p>
+                        <p class="info-value"><a href="mailto:admin@theprojectwala.com" class="text-blue-600">admin@theprojectwala.com</a></p>
+                    </div>
+                    <div class="info-box">
+                        <p class="info-label">Official Website</p>
+                        <p class="info-value"><a href="https://www.theprojectwala.com" target="_blank" class="text-blue-600">www.theprojectwala.com</a></p>
+                    </div>
+                </div>
+
+                <button class="btn btn-secondary mt-2" onclick="window.location.href=window.location.pathname">← Back to Home</button>
             </div>
             <div class="copyright">${COPYRIGHT_HTML}</div>
         `;
@@ -173,9 +224,9 @@
         var carId = "SP" + Math.random().toString(36).substr(2, 6).toUpperCase();
 
         const payload = {
-            id: carId, // Send ID to database
+            id: carId, 
             auth_id: AUTH_ID, 
-            auth_pass: AUTH_PASS, // Send new password
+            auth_pass: AUTH_PASS, 
             name: name, phone: phone, email: email, vehicle: vehicle,
             emg_name: emg_name, emg_phone: emg_phone,
             show_number: isPrivate ? "No" : "Yes"
