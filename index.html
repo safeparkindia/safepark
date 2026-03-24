@@ -20,10 +20,15 @@
         label { font-size: 13px; font-weight: 600; color: #374151; margin-top: 12px; display: block; }
         .logo-img { width: 80px; height: 80px; margin: 0 auto; display: block; border-radius: 16px; object-fit: cover; }
         .copyright { text-align: center; font-size: 11px; color: #9ca3af; padding: 15px 10px; background: #f9fafb; border-top: 1px solid #f1f5f9; }
-        .copyright a { color: #f97316; text-decoration: none; font-weight: bold; }
+        .copyright a { color: #f97316; text-decoration: none; font-weight: bold; margin: 0 5px; }
         .info-box { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin-top: 8px; text-align: left; }
         .info-label { font-size: 11px; color: #64748b; }
         .info-value { font-size: 15px; font-weight: 600; color: #1e293b; }
+        .toggle-box { background-color: #eff6ff; padding: 10px; border-radius: 8px; margin-top: 10px; border: 1px solid #bfdbfe; }
+        .toggle-label { display: flex; align-items: center; cursor: pointer; }
+        .toggle-label input { width: 18px; height: 18px; cursor: pointer; margin: 0; }
+        .toggle-text { margin-left: 8px; font-weight: 600; color: #1e40af; font-size: 13px; }
+        .toggle-desc { font-size: 11px; color: #3b82f6; margin-top: 4px; margin-left: 26px; }
     </style>
 </head>
 <body>
@@ -39,13 +44,14 @@
 
     // --- CONFIGURATION ---
     const LOGO_URL = "./logo.png";
-    const COPYRIGHT_HTML = `<a href="https://www.theprojectwala.com" target="_blank">© The Project Wala</a>`;
+    const DONATION_QR = "./qr.png"; // YOUR DONATION QR IMAGE
+    const COPYRIGHT_HTML = `<a href="https://www.theprojectwala.com" target="_blank">© The Project Wala</a> | <a href="?page=terms">T&C</a>`;
     
     // YOUR NEW DATABASE URL
     const DATABASE_URL = "https://script.google.com/macros/s/AKfycbwuRWulp2pSiygr6BQ1NOni6fX4_koAiUCbAHSmDlyHbq25QAHOyvHDzktyGXg5hnqpyA/exec"; 
     
     const AUTH_ID = "ceosafeparkindia";
-    const AUTH_PASS = "Safeparkdb@007"; // NEW PASSWORD
+    const AUTH_PASS = "Safeparkdb@007"; 
 
     // --- ROUTER ---
     function router() {
@@ -57,6 +63,8 @@
             fetchCarData(carId);
         } else if (pageParam === 'about') {
             showAboutPage();
+        } else if (pageParam === 'terms') {
+            showTermsPage(); 
         } else {
             showLandingPage();
         }
@@ -77,7 +85,61 @@
             .catch(() => showErrorPage());
     }
 
-    // --- PAGE: ABOUT US (NEW DETAILED VERSION) ---
+    // --- PAGE: TERMS AND CONDITIONS ---
+    function showTermsPage() {
+        document.getElementById('app').innerHTML = `
+             <div class="text-center pt-6">
+                <img src="${LOGO_URL}" alt="Logo" class="logo-img" onerror="this.style.display='none'">
+                <h1 class="text-2xl font-bold text-gray-800 mt-3">Terms & Conditions</h1>
+                <p class="text-gray-500 text-xs mt-1">Last Updated: October 2024</p>
+            </div>
+            
+            <div class="mt-5 text-gray-700 text-sm leading-relaxed space-y-4 text-justify">
+                
+                <div class="bg-red-50 border border-red-200 p-3 rounded-lg">
+                    <h3 class="font-bold text-red-700 mb-1">⚠️ DISCLAIMER OF LIABILITY</h3>
+                    <p class="text-red-800 text-xs font-semibold">
+                        SAFE PARK INDIA AND THE PROJECT WALA PROVIDES THIS SERVICE "AS IS". WE ARE NOT RESPONSIBLE FOR ANY DAMAGES OR CLAIMS ARISING FROM THE USE OF THIS SERVICE.
+                    </p>
+                </div>
+
+                <div>
+                    <h3 class="font-bold text-gray-800 mb-1">1. Acceptance</h3>
+                    <p class="text-gray-600">By using this Service, you agree to these Terms. This Service is provided by The Project Wala.</p>
+                </div>
+
+                <div>
+                    <h3 class="font-bold text-gray-800 mb-1">2. Nature of Service</h3>
+                    <p class="text-gray-600">SafePark India is a utility tool for communication between vehicle owners and the public. It is intended for lawful purposes only.</p>
+                </div>
+
+                <div>
+                    <h3 class="font-bold text-gray-800 mb-1">3. No Emergency Service</h3>
+                    <p class="text-gray-600"><b>This is not a substitute for emergency services.</b> In case of accidents or crimes, contact authorities directly.</p>
+                </div>
+                
+                <div>
+                    <h3 class="font-bold text-gray-800 mb-1">4. Limitation of Liability</h3>
+                    <p class="text-gray-600">The Project Wala and its owner (Mohit Kumar Jha) shall not be liable for any indirect, incidental, or punitive damages arising from the use of this service.</p>
+                </div>
+
+                 <div>
+                    <h3 class="font-bold text-gray-800 mb-1">5. Indemnification</h3>
+                    <p class="text-gray-600">You agree to indemnify The Project Wala against any claims resulting from your misuse of the service.</p>
+                </div>
+
+                <div class="info-box">
+                    <p class="info-label">Governing Law</p>
+                    <p class="info-value text-sm">Laws of India.</p>
+                </div>
+
+                <button class="btn btn-secondary" onclick="window.location.href=window.location.pathname">← Back to Home</button>
+            </div>
+            <div class="copyright">${COPYRIGHT_HTML}</div>
+        `;
+    }
+
+    // --- PAGE: ABOUT US ---
     function showAboutPage() {
         document.getElementById('app').innerHTML = `
              <div class="text-center pt-6">
@@ -87,78 +149,27 @@
             </div>
             
             <div class="mt-5 text-gray-700 text-sm leading-relaxed space-y-4">
-                
                 <div>
                     <h3 class="font-bold text-blue-800 text-base mb-1">🚀 Our Vision</h3>
-                    <p class="text-gray-600 text-justify">
-                        SafePark India is not just an app; it is a movement towards smarter, safer, and more organized cities. We believe that technology should solve everyday problems without compromising personal security. In a rapidly urbanizing India, parking issues often lead to unnecessary conflicts, towing hassles, and lost time. SafePark India aims to eliminate this chaos with a simple scan.
-                    </p>
+                    <p class="text-gray-600 text-justify">SafePark India is a movement towards smarter cities, solving parking issues without compromising privacy.</p>
                 </div>
 
                 <div class="bg-gray-50 p-4 rounded-lg border">
-                    <h3 class="font-bold text-gray-800 text-base mb-2">📉 The Problem We Solve</h3>
-                    <p class="text-gray-600 text-justify mb-2">
-                        Every day, thousands of vehicle owners face the dilemma: <i>"Should I write my phone number on the dashboard?"</i>
-                    </p>
-                    <ul class="list-disc ml-5 text-gray-600 space-y-1">
-                        <li><b>Privacy Risk:</b> Writing your number publicly invites spam calls, pranksters, and potential security threats.</li>
-                        <li><b>Communication Gap:</b> Without contact info, blocked vehicles cause traffic jams and arguments.</li>
-                        <li><b>Inefficiency:</b> Finding the owner of a car with lights left on or a flat tire is impossible.</li>
-                    </ul>
+                    <h3 class="font-bold text-gray-800 text-base mb-2">📉 The Problem</h3>
+                    <p class="text-gray-600">Writing phone numbers on dashboards invites spam and privacy risks. SafePark fixes this.</p>
                 </div>
 
-                <div class="bg-orange-50 p-4 rounded-lg border border-orange-100">
-                    <h3 class="font-bold text-orange-800 text-base mb-2">💡 Our Innovative Solution</h3>
-                    <p class="text-gray-700 text-justify">
-                        Developed by the team at <b>The Project Wala</b>, SafePark India replaces the outdated "paper-and-pen" method with a secure digital QR code. Our technology acts as a privacy shield. When someone scans your code, they can contact you instantly via a secure call or message—but they never see your actual phone number unless you allow it. This ensures that help reaches you when you need it, while keeping your identity safe.
-                    </p>
-                </div>
+                <div class="info-box"><p class="info-label">CEO</p><p class="info-value">Mohit Kumar Jha</p></div>
+                <div class="info-box"><p class="info-label">Email</p><p class="info-value"><a href="mailto:admin@theprojectwala.com" class="text-blue-600">admin@theprojectwala.com</a></p></div>
+                <div class="info-box"><p class="info-label">Website</p><p class="info-value"><a href="https://www.theprojectwala.com" target="_blank" class="text-blue-600">www.theprojectwala.com</a></p></div>
 
-                <div>
-                    <h3 class="font-bold text-gray-800 text-base mb-2">✨ Key Highlights</h3>
-                    <div class="grid grid-cols-2 gap-2 text-center">
-                        <div class="bg-blue-50 p-2 rounded">
-                            <p class="font-bold text-blue-600">100% Free</p>
-                            <p class="text-xs text-gray-500">No subscription fees</p>
-                        </div>
-                        <div class="bg-green-50 p-2 rounded">
-                            <p class="font-bold text-green-600">Privacy First</p>
-                            <p class="text-xs text-gray-500">Number masking tech</p>
-                        </div>
-                        <div class="bg-purple-50 p-2 rounded">
-                            <p class="font-bold text-purple-600">Instant Alerts</p>
-                            <p class="text-xs text-gray-500">Email notifications</p>
-                        </div>
-                        <div class="bg-red-50 p-2 rounded">
-                            <p class="font-bold text-red-600">Emergency</p>
-                            <p class="text-xs text-gray-500">Backup contacts</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="pt-2">
-                    <p class="text-xs text-center text-gray-500 font-semibold uppercase tracking-wide mb-2">Contact The Team</p>
-                    <div class="info-box">
-                        <p class="info-label">CEO & Founder</p>
-                        <p class="info-value">Mohit Kumar Jha</p>
-                    </div>
-                    <div class="info-box">
-                        <p class="info-label">Support Email</p>
-                        <p class="info-value"><a href="mailto:admin@theprojectwala.com" class="text-blue-600">admin@theprojectwala.com</a></p>
-                    </div>
-                    <div class="info-box">
-                        <p class="info-label">Official Website</p>
-                        <p class="info-value"><a href="https://www.theprojectwala.com" target="_blank" class="text-blue-600">www.theprojectwala.com</a></p>
-                    </div>
-                </div>
-
-                <button class="btn btn-secondary mt-2" onclick="window.location.href=window.location.pathname">← Back to Home</button>
+                <button class="btn btn-secondary" onclick="window.location.href=window.location.pathname">← Back to Home</button>
             </div>
             <div class="copyright">${COPYRIGHT_HTML}</div>
         `;
     }
 
-    // --- PAGE 1: REGISTRATION ---
+    // --- PAGE 1: REGISTRATION (WITH DONATION & NEW FIELDS) ---
     function showLandingPage() {
         document.getElementById('app').innerHTML = `
             <div class="text-center pt-6">
@@ -180,22 +191,44 @@
                 <label>Vehicle Number</label>
                 <input type="text" id="vehicle_number" placeholder="MH 01 AB 1234">
                 
-                <label>Emergency Contact (Optional)</label>
-                <input type="text" id="emg_name" placeholder="Relative Name">
-                <input type="tel" id="emg_phone" placeholder="Relative Number" class="mt-2">
+                <hr class="my-4 border-gray-200">
+                <p class="text-xs font-bold text-gray-500 uppercase">Emergency Contact (Optional)</p>
 
-                <!-- PRIVACY TOGGLE -->
-                <div style="background-color: #eff6ff; padding: 10px; border-radius: 8px; margin-top: 15px; border: 1px solid #bfdbfe;">
-                    <label style="display: flex; align-items: center; cursor: pointer; margin-top:0;">
-                        <input type="checkbox" id="privacy_toggle" checked style="width: 18px; height: 18px; cursor: pointer;">
-                        <span style="margin-left: 8px; font-weight: 600; color: #1e40af; font-size: 13px;">Hide My Number (Recommended)</span>
+                <label>Emergency Contact Name</label>
+                <input type="text" id="emg_name" placeholder="Relative Name">
+
+                <label>Emergency Contact Phone</label>
+                <input type="tel" id="emg_phone" placeholder="Relative Number">
+
+                <!-- NEW: Emergency Email -->
+                <label>Emergency Contact Email</label>
+                <input type="email" id="emg_email" placeholder="relative@example.com">
+
+                <!-- TOGGLES -->
+                <div class="toggle-box">
+                    <label class="toggle-label">
+                        <input type="checkbox" id="privacy_toggle" checked>
+                        <span class="toggle-text">Hide My Number</span>
                     </label>
-                    <p style="font-size: 11px; color: #3b82f6; margin-top: 4px; margin-left: 26px;">
-                        If checked, people must chat with you.
-                    </p>
+                    <p class="toggle-desc">Recommended. People must chat with you.</p>
                 </div>
 
-                <button class="btn btn-primary" onclick="generateQRCode()">Generate QR Code</button>
+                <div class="toggle-box" style="background-color: #fef3c7; border-color: #fcd34d;">
+                    <label class="toggle-label">
+                        <input type="checkbox" id="privacy_emg_toggle" checked>
+                        <span class="toggle-text" style="color: #92400e;">Hide Emergency Number</span>
+                    </label>
+                    <p class="toggle-desc" style="color: #b45309;">Scanner cannot call, only email.</p>
+                </div>
+
+                <button class="btn btn-primary mt-4" onclick="generateQRCode()">Generate QR Code</button>
+            </div>
+
+            <!-- DONATION SECTION -->
+            <div class="mt-6 p-4 bg-white rounded-xl border border-green-200 text-center">
+                <h3 class="font-bold text-green-700 text-sm">💖 Support Our Mission</h3>
+                <p class="text-gray-500 text-xs mt-1 mb-3">If you like this idea, scan to donate.</p>
+                <img src="${DONATION_QR}" alt="Donate QR" class="w-32 h-32 mx-auto rounded-lg shadow-sm" onerror="this.style.display='none'">
             </div>
             
             <div class="text-center mt-4">
@@ -213,14 +246,16 @@
         const vehicle = document.getElementById('vehicle_number').value;
         const emg_name = document.getElementById('emg_name').value;
         const emg_phone = document.getElementById('emg_phone').value;
+        const emg_email = document.getElementById('emg_email').value; // NEW
+
         const isPrivate = document.getElementById('privacy_toggle').checked;
+        const isEmgPrivate = document.getElementById('privacy_emg_toggle').checked;
 
         if (!name || !phone || !vehicle || !email) {
             alert("Please fill Name, Phone, Email, and Vehicle Number.");
             return;
         }
 
-        // Generate Random ID
         var carId = "SP" + Math.random().toString(36).substr(2, 6).toUpperCase();
 
         const payload = {
@@ -228,11 +263,11 @@
             auth_id: AUTH_ID, 
             auth_pass: AUTH_PASS, 
             name: name, phone: phone, email: email, vehicle: vehicle,
-            emg_name: emg_name, emg_phone: emg_phone,
-            show_number: isPrivate ? "No" : "Yes"
+            emg_name: emg_name, emg_phone: emg_phone, emg_email: emg_email,
+            show_number: isPrivate ? "No" : "Yes",
+            show_emg_number: isEmgPrivate ? "No" : "Yes"
         };
 
-        // Send data to database
         fetch(DATABASE_URL, {
             method: 'POST',
             mode: 'no-cors',
@@ -277,10 +312,11 @@
 
     // --- PAGE 3: SCANNER VIEW (HYBRID) ---
     function showScannerPage(carId, data) {
-        const canCall = data.phone && data.phone.length > 0;
+        const canCallOwner = data.phone && data.phone.length > 0;
+        const canCallEmg = data.emg_phone && data.emg_phone.length > 0;
 
         let callButtonHtml = '';
-        if(canCall) {
+        if(canCallOwner) {
             callButtonHtml = `
                 <a href="tel:${data.phone}" style="text-decoration: none;">
                     <button class="btn btn-call" style="font-size: 16px;">📞 Call Owner</button>
@@ -291,6 +327,26 @@
              callButtonHtml = `
                 <div style="background-color: #f3f4f6; padding: 8px; border-radius: 8px; text-align: center; margin-bottom: 10px;">
                     <p style="color: #6b7280; font-size: 12px;">🔒 Owner prefers <b>Private Mode</b>.</p>
+                </div>
+            `;
+        }
+
+        let emgButtonHtml = '';
+        if(canCallEmg) {
+            emgButtonHtml = `
+                <div class="border-t pt-4 mt-4">
+                    <p class="text-xs text-center text-gray-500 mb-2">⚠️ Unable to reach owner?</p>
+                    <a href="tel:${data.emg_phone}" class="block w-full">
+                        <button class="btn bg-orange-500 hover:bg-orange-600">🆘 Call Emergency (${data.emg_name})</button>
+                    </a>
+                </div>
+            `;
+        } else if (data.emg_name) {
+            // If emergency name exists but phone is hidden, show info
+             emgButtonHtml = `
+                <div class="border-t pt-4 mt-4">
+                    <p class="text-xs text-center text-gray-500 mb-2">⚠️ Emergency Contact: ${data.emg_name}</p>
+                    <p class="text-xs text-center text-gray-400">Number hidden. Use message below.</p>
                 </div>
             `;
         }
@@ -313,14 +369,7 @@
                 
                 <button class="btn" style="background-color: #2563eb;" onclick="sendMessage('${carId}')">📨 Send Message</button>
 
-                ${data.emg_phone ? `
-                <div class="border-t pt-4 mt-4">
-                    <p class="text-xs text-center text-gray-500 mb-2">⚠️ Unable to reach owner?</p>
-                    <a href="tel:${data.emg_phone}" class="block w-full">
-                        <button class="btn bg-orange-500 hover:bg-orange-600">🆘 Call Emergency (${data.emg_name})</button>
-                    </a>
-                </div>
-                ` : ''}
+                ${emgButtonHtml}
             </div>
 
             <div class="copyright">${COPYRIGHT_HTML}</div>
@@ -337,7 +386,7 @@
             <div class="text-center pt-20">
                 <div style="font-size: 40px;">✅</div>
                 <h2 class="text-xl font-bold text-green-600 mt-3">Message Sent!</h2>
-                <p class="text-gray-500 mt-2 text-sm">The owner has been notified via Email.</p>
+                <p class="text-gray-500 mt-2 text-sm">The owner (and emergency contact if provided) has been notified via Email.</p>
             </div>
         `;
         fetch(url).catch(err => console.log(err));
